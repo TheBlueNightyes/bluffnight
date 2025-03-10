@@ -1,6 +1,6 @@
 # bluffnight
 
-the new multi-purpose bot made by bluenight, using robo.js
+the new multi-purpose bot made by bluenight using robo.js
 
 - [📚 **Documentation:** Getting started with Robo.js](https://robojs.dev/discord-bots)
 
