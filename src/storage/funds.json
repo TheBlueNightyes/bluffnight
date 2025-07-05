@@ -1,0 +1,14 @@
+{
+    "government": {
+        "crack": 5000000000,
+        "fentanyl": 8000
+    },
+    "democracky defense": {
+        "crack": 3000000000,
+        "fentanyl": 3000
+    },
+    "space program": {
+        "crack": 2000000000,
+        "fentanyl": 1250
+    }
+}

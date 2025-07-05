@@ -1,0 +1,69 @@
+{
+  "1283954438868041728": {
+    "users": {
+      "670646662808469536": {
+        "balance": 9939999,
+        "crack": 1007063,
+        "fentanyl": 100447,
+        "lastCollect": 1751747835399
+      },
+      "196762806492594176": {
+        "balance": 60000,
+        "crack": 0,
+        "fentanyl": 0,
+        "lastCollect": 0
+      },
+      "1322526205127163976": {
+        "crack": 6000,
+        "fentanyl": 0,
+        "lastCollect": 0
+      },
+      "919205746372141067": {
+        "crack": 80000,
+        "fentanyl": 52,
+        "lastCollect": 1751700960525
+      },
+      "1095930982344953888": {
+        "crack": 850,
+        "fentanyl": 0,
+        "lastCollect": 1751748188772
+      }
+    }
+  },
+  "1109919953408237731": {
+    "users": {
+      "670646662808469536": {
+        "balance": 200,
+        "crack": 91494,
+        "fentanyl": 97899,
+        "lastCollect": 0
+      },
+      "1095930982344953888": {
+        "balance": 100,
+        "crack": 0,
+        "fentanyl": 0,
+        "lastCollect": 0
+      },
+      "919205746372141067": {
+        "crack": 0,
+        "fentanyl": 400,
+        "lastCollect": 0
+      },
+      "1249522450329501738": {
+        "crack": 9000,
+        "fentanyl": 0,
+        "lastCollect": 0
+      },
+      "772242751428231210": {
+        "crack": 0,
+        "fentanyl": 100,
+        "lastCollect": 0
+      },
+      "1144841349368127539": {
+        "crack": 0,
+        "fentanyl": 2000,
+        "lastCollect": 0
+      }
+    }
+  }
+}
