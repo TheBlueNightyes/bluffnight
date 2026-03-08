@@ -2,11 +2,11 @@ import { createCommandConfig, logger } from 'robo.js'
 import { askGemini } from "../utils/gemini.js";
 
 export const config = createCommandConfig({
-    description: 'Speak to the Bluffnight AI',
+    description: 'MY TIME. MINE',
     options: [
         {
             name: 'message',
-            description: 'What do you want to say?',
+            description: 'he awakes',
             type: 'string',
             required: true,
         },

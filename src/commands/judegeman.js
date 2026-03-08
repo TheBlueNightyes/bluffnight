@@ -3,17 +3,17 @@ import { askGemini } from "../utils/gemini.js";
 import { AttachmentBuilder } from 'discord.js';
 
 export const config = createCommandConfig({
-    description: 'Summon Judgeman to evaluate a user',
+    description: 'inquire',
     options: [
         {
             name: 'user',
-            description: 'User on trial',
+            description: 'smoke him',
             type: 'user',
             required: true,
         },
         {
             name: 'input',
-            description: 'Additional context or accusation for the trial',
+            description: 'OBJECTION!',
             type: 'string',
             required: false,
         }

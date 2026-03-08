@@ -22,7 +22,7 @@ if (fs.existsSync(STATS_FILE)) {
 fs.writeFileSync(STATS_FILE, JSON.stringify(stats, null, 2));
 
 export const config = createCommandConfig({
-	description: 'Show bot session info'
+	description: 'his secrets'
 });
 
 export default (interaction) => {

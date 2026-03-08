@@ -3,17 +3,17 @@ import { AttachmentBuilder } from 'discord.js'
 import { createCanvas, loadImage } from 'canvas'
 
 export const config = createCommandConfig({
-    description: 'Generate AIPAC tracker image',
+    description: 'check yo donos',
     options: [
         {
             name: 'user',
-            description: 'User to track',
+            description: 'happy bank',
             type: 'user',
             required: true
         },
         {
             name: 'amount',
-            description: 'Amount received',
+            description: 'how much in the pockets',
             type: 'number',
             required: true
         }

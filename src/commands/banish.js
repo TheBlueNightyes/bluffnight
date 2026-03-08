@@ -6,7 +6,7 @@ const ALLOWED_USERS = [
 ]
 
 export const config = createCommandConfig({
-	description: 'Its ggs.',
+	description: 'It\'s ggs',
 	options: [
 		{
 			name: 'user',

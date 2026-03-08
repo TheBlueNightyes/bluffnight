@@ -33,7 +33,7 @@ export const config = createCommandConfig({
     options: [
         {
             name: 'currency',
-            description: 'Currency to gamble',
+            description: 'use all of it',
             type: 'string',
             choices: [
                 { name: 'crack', value: 'crack' },
@@ -43,7 +43,7 @@ export const config = createCommandConfig({
         },
         {
             name: 'amount',
-            description: 'Bet amount',
+            description: 'PUT IT ALL DOWN',
             type: 'integer',
             required: true
         }

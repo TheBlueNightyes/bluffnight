@@ -31,17 +31,17 @@ function saveEconomyData(data) {
 }
 
 export const config = createCommandConfig({
-    description: 'Start a betting challenge between two factors',
+    description: 'the dumbest thing alive',
     options: [
         {
             name: 'factor1',
-            description: 'First factor to bet on',
+            description: 'first up',
             type: 'string',
             required: true,
         },
         {
             name: 'factor2',
-            description: 'Second factor to bet on',
+            description: 'last served',
             type: 'string',
             required: true,
         }

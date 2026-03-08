@@ -28,7 +28,7 @@ const CATEGORY_CHOICES = [
 ];
 
 export const config = createCommandConfig({
-    description: 'Check your house or browse houses',
+    description: 'good investments',
     options: [
         {
             name: 'category',

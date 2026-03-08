@@ -2,7 +2,7 @@ import { createCommandConfig } from 'robo.js';
 import { askGemini } from '../utils/gemini.js';
 
 export const config = createCommandConfig({
-    description: 'Challenge another user to RPA',
+    description: 'the ULTIMATE test',
     options: [{ name: 'user', description: 'Your opponent', type: 'user', required: true }]
 });
 

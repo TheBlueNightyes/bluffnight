@@ -18,7 +18,7 @@ export const config = createCommandConfig({
     options: [
         {
             name: 'type',
-            description: 'Action to take',
+            description: 'THE options',
             type: 'string',
             choices: [
                 { name: 'crack', value: 'crack' },

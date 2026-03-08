@@ -49,11 +49,11 @@ function getUserData(econData, guildId, userId) {
 }
 
 export const config = createCommandConfig({
-    description: 'Marketplace: sell, view, or buy items.',
+    description: 'the markets r up',
     options: [
         {
             name: 'type',
-            description: 'Action to take',
+            description: 'bit of everything',
             type: 'string',
             choices: [
                 { name: 'sell', value: 'sell' },
@@ -64,19 +64,19 @@ export const config = createCommandConfig({
         },
         {
             name: 'name',
-            description: 'Item name',
+            description: 'marketable',
             type: 'string',
             required: false
         },
         {
             name: 'price',
-            description: 'Item price',
+            description: 'oof',
             type: 'integer',
             required: false
         },
         {
             name: 'currency',
-            description: 'Item currency',
+            description: 'few few few',
             type: 'string',
             choices: [
                 { name: 'crack', value: 'crack' },
@@ -86,7 +86,7 @@ export const config = createCommandConfig({
         },
         {
             name: 'description',
-            description: 'Item description',
+            description: 'moronic',
             type: 'string',
             required: false
         }

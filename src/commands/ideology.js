@@ -49,10 +49,10 @@ const IDEOLOGIES = [
 ];
 
 export const config = createCommandConfig({
-    description: 'Choose or view your ideological alignment.',
+    description: 'THE controversial command?',
     options: [{
         name: 'alignment',
-        description: 'Choose your ideology.',
+        description: 'big time',
         type: 'string',
         choices: IDEOLOGIES.map(id => ({ name: id, value: id })),
         required: false

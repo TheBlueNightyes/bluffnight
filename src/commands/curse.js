@@ -29,17 +29,17 @@ function saveCurses(data) {
 const AVAILABLE_CURSES = ['uwuify'];
 
 export const config = createCommandConfig({
-  description: 'Apply a curse effect to a user.',
+  description: 'nuke the whole generation',
   options: [
     {
       name: 'user',
-      description: 'User to curse',
+      description: 'bad omen',
       type: 'user',
       required: true,
     },
     {
       name: 'curse',
-      description: 'Curse to apply',
+      description: 'wrap it up',
       type: 'string',
       required: true,
       choices: AVAILABLE_CURSES.map(c => ({ name: c, value: c })),
