@@ -28,3 +28,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 .gitattributes
+
+# storage
+src/storage/stats.json
+src/storage/curses.json
+src/storage/economy.json
+src/storage/houses.json
+src/storage/market.json
+src/storage/misc.json
+src/storage/people.json
