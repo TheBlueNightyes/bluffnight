@@ -94,15 +94,15 @@ export default async (interaction) => {
     // Footer above banner
     ctx.font = '28px Sans'
     ctx.fillStyle = '#aaaaaa'
-    ctx.fillText('via fec.gov', 450, 560)
+    ctx.fillText('via fec.gov', 50, 450)
 
     // Highlighted banner for handle
     ctx.fillStyle = '#ff1a1a'
-    ctx.fillRect(350, 540, 550, 50)
+    ctx.fillRect(425, 540, 550, 50)
 
     ctx.fillStyle = 'white'
     ctx.font = 'bold 40px Sans'
-    ctx.fillText('@TRACKAIPAC', 470, 575)
+    ctx.fillText('@TRACKAIPAC', 540, 575)
 
     // Larger, centered date under avatar
     const date = new Date().toLocaleDateString()
