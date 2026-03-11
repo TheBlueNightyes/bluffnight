@@ -30,7 +30,7 @@ export default async (interaction) => {
     await interaction.deferReply()
 
     const user = interaction.options.getUser('user')
-
+    
     function getRandomIntInclusive(min, max) {
         min = Math.ceil(min);
         max = Math.floor(max);
@@ -38,7 +38,7 @@ export default async (interaction) => {
     }
 
 	const footers = [
-		"He defintley went to that Island.",
+		"They definitely went to that island.",
 		"Knew Epstein professionally.",
 		"Diddler."
 	];
