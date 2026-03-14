@@ -31,7 +31,7 @@ function drawCentered(ctx, text, y) {
 }
 
 export default async (interaction) => {
-    logger.info(`Epstein command used by ${interaction.user.tag}`);
+    logger.info(`Red notice command used by ${interaction.user.tag}`);
     await interaction.deferReply()
 
     const user = interaction.options.getUser('user')
@@ -91,7 +91,7 @@ export default async (interaction) => {
     ctx.fillText(highestRole, 650, 440)
 
     const buffer = canvas.toBuffer()
-    const attachment = new AttachmentBuilder(buffer, { name: 'aipac.png' })
+    const attachment = new AttachmentBuilder(buffer, { name: 'redNotice.png' })
 
     await interaction.editReply({
         files: [attachment]
