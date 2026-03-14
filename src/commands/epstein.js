@@ -124,7 +124,7 @@ export default async (interaction) => {
 
     // Finalize and send
     const buffer = canvas.toBuffer()
-    const attachment = new AttachmentBuilder(buffer, { name: 'aipac.png' })
+    const attachment = new AttachmentBuilder(buffer, { name: 'epstein.png' })
 
     await interaction.editReply({
         files: [attachment]
