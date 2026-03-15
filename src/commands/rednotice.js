@@ -3,11 +3,11 @@ import { AttachmentBuilder } from 'discord.js'
 import { createCanvas, loadImage } from 'canvas'
 
 export const config = createCommandConfig({
-    description: 'his li\'l island',
+    description: 'you are on the fraud watch',
     options: [
         {
             name: 'user',
-            description: 'LOGGED',
+            description: 'super senior?',
             type: 'user',
             required: true
         }
