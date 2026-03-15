@@ -11,7 +11,7 @@ export const config = createCommandConfig({
 })
 
 export default (interaction) => {
-	logger.info(`Lazy's actions discovered by ${interaction.user}`)
+    logger.info(`Matters command used by ${interaction.user.tag}`);
     const question = interaction.options.getString('question');
 	const image = [
 		'./src/assets/DoesItMatter.jpg',
