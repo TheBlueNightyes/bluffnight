@@ -120,6 +120,8 @@ export default async (interaction) => {
             The "Accusation / Context" is a witness statement from the person summoning Judgeman.
             Treat it as valid testimony and consider it strongly when determining the charge.
 
+            Keep responses under 2000 words.
+
             Return your verdict EXACTLY in this format:
 
             Charge:
