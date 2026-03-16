@@ -146,14 +146,14 @@ export default async (interaction) => {
 
         const Images = {
             noVerdict: [
-                "https://cdn.discordapp.com/attachments/1316610681969053757/1479975304477937865/NoVerdict.png?ex=69adfde9&is=69acac69&hm=d8dd584876c0d14ff9bf83ba47c12e8f3ad578c1e083940c66b8efb2b400c766&"
+                './src/assets/NoVerdict.png'
             ],
             guilty: [
-                "https://cdn.discordapp.com/attachments/1316610681969053757/1479977028030824573/Guilty1.png?ex=69adff84&is=69acae04&hm=ff5f46a46f074d53ee2ee29119bb4274cf8541920e92d19c6de66f0b9aeddd7f&",
-                "https://cdn.discordapp.com/attachments/1316610681969053757/1479975303953780746/Guilty2.png?ex=69adfde9&is=69acac69&hm=08c78fe6592d30f79e2e2a8b907da05ceaf6940e89b7c8a6294da86fa53405d1&"
+                 './src/assets/Guilty1.png',
+                './src/assets/Guilty2.png',
             ],
             warnOrBan: [
-                "https://cdn.discordapp.com/attachments/1316610681969053757/1479975302804541552/DeathPenalty.png?ex=69adfde8&is=69acac68&hm=d8d3dd27573f13c98a2d8c900037f27fc5c728ba558f32054adea4c3ca79669c&"
+                './src/assets/DeathPenalty.png',
             ]
         };
 
