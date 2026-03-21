@@ -81,25 +81,25 @@ export default async (interaction) => {
         dance: `${interaction.user} danced with ${target}! 💃🕺`
     };
 
-    // Always reply first
     const baseMessage = messages[type] || `${interaction.user} interacted with ${target}`;
 
-    // Marriage points logic
     const data = loadPeopleData();
     const guildId = interaction.guild.id;
 
     const initiator = ensureUser(data, guildId, interaction.user.id);
     const receiver = ensureUser(data, guildId, target.id);
 
-    // Check if initiator is married to the target
-    if (
+    const value = VALUES[type] || 1;
+
+    // ✅ Check marriage
+    const married =
         initiator.partner &&
         initiator.partner.id === target.id &&
         receiver.partner &&
-        receiver.partner.id === interaction.user.id
-    ) {
-        const value = VALUES[type] || 1;
+        receiver.partner.id === interaction.user.id;
 
+    if (married) {
+        // 💍 Married → full points
         initiator.partner.points = (initiator.partner.points || 0) + value;
         receiver.partner.points = (receiver.partner.points || 0) + value;
 
@@ -110,7 +110,9 @@ export default async (interaction) => {
         );
 
         return interaction.reply(
-            `${baseMessage}\n> +${value} marriage point${value > 1 ? 's' : ''}`
+            `${baseMessage}\n> 💖 +${value} marriage point${value > 1 ? 's' : ''}`
         );
     }
-};
+
+    return interaction.reply(baseMessage);
+}
