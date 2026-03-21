@@ -110,9 +110,32 @@ export default async (interaction) => {
             userData.crack += crack;
             userData.fentanyl += fentanyl;
 
-            rewardBreakdown.push(`**${roleName}** ➜ +${crack.toLocaleString()} Crack | +${fentanyl.toLocaleString()} Fentanyl`);
+            const parts = [];
+            if (crack > 0) parts.push(`+${crack.toLocaleString()} Crack`);
+            if (fentanyl > 0) parts.push(`+${fentanyl.toLocaleString()} Fentanyl`);
+
+            if (parts.length > 0) {
+                rewardBreakdown.push(`**${roleName}** ➜ ${parts.join(' | ')}`);
+            }
         }
     }
+
+    if (rewardBreakdown.length === 0) {
+        return interaction.reply({
+            content: '❌ Failed to collect',
+            ephemeral: true
+        });
+    }
+
+    const totalRewardsText = [
+        totalCrack > 0 ? `+${totalCrack.toLocaleString()} Crack` : null,
+        totalFentanyl > 0 ? `+${totalFentanyl.toLocaleString()} Fentanyl` : null
+    ].filter(Boolean).join('\n') || 'Nothing collected';
+
+    const balanceText = [
+        userData.crack > 0 ? `${userData.crack.toLocaleString()} Crack` : null,
+        userData.fentanyl > 0 ? `${userData.fentanyl.toLocaleString()} Fentanyl` : null
+    ].filter(Boolean).join('\n') || 'No balance';
 
     const embed = new EmbedBuilder()
         .setTitle('✅ Collection Successful')
@@ -120,11 +143,11 @@ export default async (interaction) => {
         .setDescription([
             `${user} collected:\n`,
             `**Total Rewards**`,
-            `+${totalCrack.toLocaleString()} Crack\n+${totalFentanyl.toLocaleString()} Fentanyl\n`,
+            totalRewardsText + '\n',
             `**From Roles:**`,
-            rewardBreakdown.length > 0 ? rewardBreakdown.join('\n') : 'No eligible roles found.',
+            rewardBreakdown.join('\n'),
             `\n**New Balance:**`,
-            `${userData.crack.toLocaleString()} Crack\n${userData.fentanyl.toLocaleString()} Fentanyl`
+            balanceText
         ].join('\n'))
         .setTimestamp();
 
