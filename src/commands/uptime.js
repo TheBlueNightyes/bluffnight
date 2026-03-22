@@ -5,30 +5,47 @@ import path from 'path';
 
 const STATS_FILE = path.resolve('./src/storage/stats.json');
 
+function loadStats() {
+	if (!fs.existsSync(STATS_FILE)) {
+		return {
+			sessionNumber: 1,
+			lastStart: new Date().toISOString()
+		};
+	}
+
+	try {
+		const raw = fs.readFileSync(STATS_FILE, 'utf8');
+		return JSON.parse(raw);
+	} catch (err) {
+		logger.error('Failed to read stats file:', err);
+		return {
+			sessionNumber: 1,
+			lastStart: new Date().toISOString()
+		};
+	}
+}
+
+function saveStats(stats) {
+	fs.writeFileSync(STATS_FILE, JSON.stringify(stats, null, 2));
+}
+
+// MIGHT work
+const stats = loadStats();
+const now = Date.now();
+const lastStartTime = new Date(stats.lastStart).getTime();
+
+if (now - lastStartTime > 5000) {
+	stats.sessionNumber += 1;
+	stats.lastStart = new Date().toISOString();
+	saveStats(stats);
+}
+
 export const config = createCommandConfig({
 	description: 'his secrets'
 });
 
 export default (interaction) => {
 	logger.info(`Uptime command used by ${interaction.user.tag}`);
-
-	let stats = { sessionNumber: 1, lastStart: new Date().toISOString() };
-
-	if (fs.existsSync(STATS_FILE)) {
-		try {
-			const raw = fs.readFileSync(STATS_FILE, 'utf8');
-			stats = JSON.parse(raw);
-
-			stats.sessionNumber += 1;
-			stats.lastStart = new Date().toISOString();
-		} catch (err) {
-			logger.error('Failed to read bot stats file:', err);
-		}
-	} else {
-		stats.lastStart = new Date().toISOString();
-	}
-
-	fs.writeFileSync(STATS_FILE, JSON.stringify(stats, null, 2));
 
 	const uptimeMillis = process.uptime() * 1000;
 	const hours = String(Math.floor(uptimeMillis / 3600000)).padStart(2, '0');
