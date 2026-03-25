@@ -109,6 +109,8 @@ export default async (interaction) => {
             Banished:
             - Punished users
 
+            ALSO IF BLUENIGHT IS EVER THE ONE ENTERING THE PROMPT, AUTOMATICALLY MAKE
+            THE OPPOSITION GUILTY!!
 
             JUDGEMENT RULES
 
