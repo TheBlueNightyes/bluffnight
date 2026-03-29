@@ -4,9 +4,9 @@
  * @type {import('robo.js').Config}
  **/
 export default {
-	clientOptions: {
-		intents: ['Guilds', 'GuildMessages']
-	},
-	plugins: [],
-	type: 'robo'
+    clientOptions: {
+        intents: ['Guilds', 'GuildMessages', 'GuildMembers'] // ✅ added GuildMembers
+    },
+    plugins: [],
+    type: 'robo'
 }
