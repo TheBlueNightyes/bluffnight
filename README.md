@@ -30,6 +30,7 @@
 - **/blursedwish.** DONT BE ME
 - **/celebrate.** HAPPY BIRTHDAYY!!!! MY DAY!!!
 - **/chance.** GAMBLINGGG!!
+- **/check.** investigate the jit
 - **/clantest.** Fetch and display clan data
 - **/clicker.** this aint cookie clicker
 - **/collect.** collect your rewards!
@@ -37,6 +38,7 @@
 - **/democrack.** WE ARE THE DEMOCRACKS. AND WE. LOVE. CRACK
 - **/divorce.** NOT a happily ever after
 - **/embed.** make fancy stuff
+- **/epstein.** his li'l island
 - **/estimateweight.** useful for women
 - **/exchange.** mama went to the bank
 - **/execute.** too many ops? well heres the solution
@@ -53,25 +55,29 @@
 - **/inventory.** loaded
 - **/judgeman.** inquire
 - **/lazy.** discover the truth
+- **/leaderboard.** u could be in the big leauges someday
 - **/list.** making a list, checking it twice!
 - **/mapwars.** for glory!
 - **/market.** markets r up
 - **/marriageleaderboard.** so many love stories!!
 - **/marry.** happily ever after :-)
 - **/match.** are you meant to be?
+- **/matters.** I LOVE U YUJI!!!
 - **/neverforget.** we know what you did, I can smell you
 - **/pay.** sharing is caring
 - **/payrespects.** F to pay respects
 - **/ping.** disturb him
 - **/poke.** this is cruel
 - **/quote.** mans is not shakesphere
-- **/redeem.** No description provided.
+- **/redeem.** redeem a code for a cool prize!
+- **/rednotice.** you are on the fraud watch
 - **/rigelection.** not used for rigging elections
 - **/roast.** grab some popcorn
 - **/rpa.** the ULTIMATE test
 - **/rps.** crashout worthy game
 - **/sandwhich.** will the sandwhich gods listen
 - **/say.** literally blackmail
+- **/slots.** play with your life... maybe
 - **/storedblackmail.** actually exposing dawgs
 - **/test-schema add.** Add data
 - **/test-schema get.** Get data
