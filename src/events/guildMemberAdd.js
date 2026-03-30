@@ -5,7 +5,6 @@ const BANISHED_ROLE_ID = '1477174612608684042';
 export default async (event) => {
     console.log('RAW EVENT:', event);
 
-    // Try both possibilities
     const member = event?.member ?? event;
 
     if (!member || !member.guild) {
@@ -20,6 +19,22 @@ export default async (event) => {
 
     if (BANISHED_USERS.includes(member.id)) {
         try {
+            const botMember = member.guild.members.me;
+
+            const rolesToRemove = member.roles.cache.filter(role =>
+                role.id !== member.guild.id &&
+                role.id !== BANISHED_ROLE_ID &&
+                role.position < botMember.roles.highest.position
+            );
+
+            if (rolesToRemove.size > 0) {
+                try {
+                    await member.roles.remove(rolesToRemove);
+                } catch (err) {
+                    console.error('❌ Failed removing roles:', err);
+                }
+            }
+
             await member.roles.add(BANISHED_ROLE_ID);
             console.log('✅ Role assigned');
         } catch (err) {
