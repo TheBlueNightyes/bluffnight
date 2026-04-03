@@ -2,15 +2,20 @@ const TARGET_GUILD_ID = '1386784456345518160';
 const BANISHED_USERS = ['1227523050929393714'];
 const BANISHED_ROLE_ID = '1477174612608684042';
 
+let initialized = false;
+
 export default async (oldMember, newMember) => {
-    // Ensure full data
+    if (!initialized) {
+        console.log('Iinitialized');
+        initialized = true;
+    }
+
     if (oldMember.partial) await oldMember.fetch();
     if (newMember.partial) await newMember.fetch();
 
     if (newMember.guild.id !== TARGET_GUILD_ID) return;
     if (!BANISHED_USERS.includes(newMember.id)) return;
 
-    // Check which roles were added
     const addedRoles = newMember.roles.cache.filter(role => !oldMember.roles.cache.has(role.id));
     if (addedRoles.size === 0) return;
 
@@ -27,20 +32,17 @@ export default async (oldMember, newMember) => {
         const highestBotRole = botMember.roles.highest;
         const banishedRole = newMember.guild.roles.cache.get(BANISHED_ROLE_ID);
 
-        // Check if bot can assign banished role
         if (!banishedRole || banishedRole.position >= highestBotRole.position) {
             console.log('❌ Cannot assign banished role due to hierarchy');
             return;
         }
 
-        // Roles we can remove
         const rolesToRemove = newMember.roles.cache.filter(role =>
             role.id !== newMember.guild.id &&
             role.id !== BANISHED_ROLE_ID &&
             role.position < highestBotRole.position
         );
 
-        // Roles we CANNOT remove (for logging)
         const blockedRoles = newMember.roles.cache.filter(role =>
             role.id !== newMember.guild.id &&
             role.id !== BANISHED_ROLE_ID &&
