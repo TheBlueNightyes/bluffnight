@@ -68,6 +68,13 @@ export default async (oldMember, newMember) => {
             await newMember.roles.add(BANISHED_ROLE_ID);
         }
 
+        if (newMember.manageable) { // checks if bot can change nickname
+            await newMember.setNickname('FAG');
+            console.log('✏️ Nickname changed"');
+        } else {
+            console.log('⚠️ Cannot change nickname due to hierarchy/permissions');
+        }
+
         console.log('✅ Banished role enforced');
     } catch (err) {
         console.error('❌ Failed enforcing roles:', err);
