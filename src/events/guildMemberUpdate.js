@@ -5,6 +5,8 @@ const BANISHED_ROLE_ID = '1477174612608684042';
 let initialized = false;
 
 export default async (oldMember, newMember) => {
+    console.log('EVENT FIRED');
+
     if (!initialized) {
         console.log('Iinitialized');
         initialized = true;
