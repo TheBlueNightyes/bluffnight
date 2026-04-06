@@ -17,14 +17,14 @@ function saveEconomyData(data) {
 }
 
 const weapons = [
-    { name: "Sword", rarity: "common", cost: { steel: 100 }, crack: 5000, fentanyl: 50 },
-    { name: "Shotgun", rarity: "common", cost: { steel: 150, chromium: 25 }, crack: 10000, fentanyl: 100 },
-    { name: "Sniper", rarity: "rare", cost: { steel: 100, chromium: 75 }, crack: 25000, fentanyl: 250 },
-    { name: "LMG", rarity: "rare", cost: { steel: 250, chromium: 150, tungsten: 50 }, crack: 50000, fentanyl: 400 },
-    { name: "Flamethrower", rarity: "epic", cost: { steel: 200, chromium: 200, tungsten: 100 }, crack: 100000, fentanyl: 750 },
-    { name: "Railgun", rarity: "epic", cost: { tungsten: 300, uranium: 150 }, crack: 250000, fentanyl: 1200 },
-    { name: "Tank", rarity: "legendary", cost: { steel: 500, chromium: 300, tungsten: 200, uranium: 50 }, crack: 500000, fentanyl: 2500 },
-    { name: "Nuke", rarity: "legendary", cost: { plutonium: 100, uranium: 500 }, crack: 1000000, fentanyl: 5000 }
+    { name: "Sword", rarity: "common", cost: { steel: 5000 }, crack: 125000, fentanyl: 50 },
+    { name: "Shotgun", rarity: "common", cost: { steel: 8000, chromium: 1000 }, crack: 200000, fentanyl: 100 },
+    { name: "Sniper", rarity: "rare", cost: { steel: 8000, chromium: 2500 }, crack: 300000, fentanyl: 250 },
+    { name: "LMG", rarity: "rare", cost: { steel: 11500, chromium: 4000, tungsten: 50 }, crack: 50000000, fentanyl: 400 },
+    { name: "Flamethrower", rarity: "epic", cost: { steel: 18000, chromium: 4000, tungsten: 100 }, crack: 80000000, fentanyl: 750 },
+    { name: "Railgun", rarity: "epic", cost: { tungsten: 9000, uranium: 5000 }, crack: 120000000, fentanyl: 1200 },
+    { name: "Tank", rarity: "legendary", cost: { steel: 17000, chromium: 10000, tungsten: 6700, uranium: 8900 }, crack: 30000000, fentanyl: 2500 },
+    { name: "Nuke", rarity: "legendary", cost: { plutonium: 55000, uranium: 900000 }, crack: 500000000, fentanyl: 5000 }
 ];
 
 export const config = createCommandConfig({
