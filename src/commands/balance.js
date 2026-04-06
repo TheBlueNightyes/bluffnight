@@ -1,18 +1,22 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import { EmbedBuilder } from 'discord.js';
 import { createCommandConfig, logger } from 'robo.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const ECONOMY_FILE = path.resolve('src/storage/economy.json');
 
 function loadEconomyData() {
-    const dataPath = path.join(__dirname, '../storage/economy.json');
-    const raw = fs.readFileSync(dataPath, 'utf-8');
-    return JSON.parse(raw);
-}
+    if (!fs.existsSync(ECONOMY_FILE)) return {};
 
+    try {
+        const raw = fs.readFileSync(ECONOMY_FILE, 'utf-8').trim();
+        if (!raw) return {};
+        return JSON.parse(raw);
+    } catch (err) {
+        console.error('Economy JSON error:', err);
+        return {};
+    }
+}
 export const config = createCommandConfig({
     description: 'balance for now',
     options: [{
@@ -23,8 +27,15 @@ export const config = createCommandConfig({
     }]
 });
 
-export default (interaction) => {
-    logger.info(`balance checked by ${interaction.user}`);
+export default async (interaction) => {
+    logger.info(`balance checked by ${interaction.user.tag}`);
+
+    if (!interaction.guild) {
+        return interaction.reply({
+            content: 'This command can only be used in a server.',
+            ephemeral: true
+        });
+    }
 
     const data = loadEconomyData();
     const guildId = interaction.guild.id;
