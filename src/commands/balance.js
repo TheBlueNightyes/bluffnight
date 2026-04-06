@@ -65,5 +65,5 @@ export default async (interaction) => {
         )
         .setTimestamp();
 
-    return interaction.reply({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed] });
 };
