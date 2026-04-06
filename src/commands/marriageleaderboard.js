@@ -1,127 +1,162 @@
 import fs from 'fs';
 import path from 'path';
-import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, ComponentType } from 'discord.js';
 import { createCommandConfig, logger } from 'robo.js';
 
 const PEOPLE_FILE = path.resolve('src/storage/people.json');
-const ENTRIES_PER_PAGE = 10;
 
 function loadPeopleData() {
     if (!fs.existsSync(PEOPLE_FILE)) return {};
     const raw = fs.readFileSync(PEOPLE_FILE, 'utf-8').trim();
     if (!raw) return {};
-    return JSON.parse(raw);
+
+    try {
+        return JSON.parse(raw);
+    } catch (err) {
+        logger.error('Failed to parse people.json:', err);
+        return {};
+    }
+}
+
+function savePeopleData(data) {
+    try {
+        fs.writeFileSync(PEOPLE_FILE, JSON.stringify(data, null, 2), 'utf-8');
+        logger.info('People data saved.');
+    } catch (err) {
+        logger.error('Failed to save people data:', err);
+    }
 }
 
 export const config = createCommandConfig({
-    description: 'so many love stories!!'
+    description: 'happily ever after',
+    options: [{
+        name: 'partner',
+        description: 'your one and only ❤️',
+        type: 'user',
+        required: true,
+    }],
 });
 
 export default async (interaction) => {
-    await interaction.deferReply();
+    if (!interaction.guild) {
+        return interaction.reply({ content: 'Server only command.', ephemeral: true });
+    }
+
+    const proposer = interaction.user;
+    const partner = interaction.options.getUser('partner');
+
+    logger.info(`${proposer.tag} proposed to ${partner.tag}`);
+
+    if (partner.bot) {
+        return interaction.reply({ content: `🤖 You can't marry bots.`, ephemeral: true });
+    }
+
+    if (proposer.id === partner.id) {
+        return interaction.reply({ content: `🪞 You can't marry yourself!`, ephemeral: true });
+    }
 
     const data = loadPeopleData();
     const guildId = interaction.guild.id;
-    const users = data[guildId]?.users || {};
 
-    logger.info(`${interaction.user.tag} checked the marriage leaderboard`);
+    if (!data[guildId]) data[guildId] = { users: {} };
 
-    const processed = new Set();
-    const marriages = [];
-
-    for (const [userId, userData] of Object.entries(users)) {
-        if (!userData.partner || !userData.partner.id) continue;
-
-        const partnerId = userData.partner.id;
-
-        // Prevent duplicates (A+B and B+A)
-        const pairKey = [userId, partnerId].sort().join('-');
-        if (processed.has(pairKey)) continue;
-
-        const partnerData = users[partnerId];
-        if (!partnerData || !partnerData.partner) continue;
-
-        const points = userData.partner.points || 0;
-
-        marriages.push({
-            users: [userId, partnerId],
-            points
-        });
-
-        processed.add(pairKey);
-    }
-
-    // Sort by points descending
-    marriages.sort((a, b) => b.points - a.points);
-
-    let currentPage = 0;
-    const totalPages = Math.ceil(marriages.length / ENTRIES_PER_PAGE);
-
-    const generateEmbed = async (page) => {
-        const start = page * ENTRIES_PER_PAGE;
-        const end = start + ENTRIES_PER_PAGE;
-        const slice = marriages.slice(start, end);
-
-        const lines = await Promise.all(slice.map(async (marriage, index) => {
-            const [id1, id2] = marriage.users;
-
-            const member1 = await interaction.guild.members.fetch(id1).catch(() => null);
-            const member2 = await interaction.guild.members.fetch(id2).catch(() => null);
-
-            const name1 = member1?.user?.username || `Unknown (${id1})`;
-            const name2 = member2?.user?.username || `Unknown (${id2})`;
-
-            return `\`${start + index + 1}.\` 💕 ${name1} & ${name2} — **${marriage.points.toLocaleString()}** pts`;
-        }));
-
-        const embed = new EmbedBuilder()
-            .setTitle(`💍 Marriage Leaderboard`)
-            .setDescription(lines.join('\n') || 'No marriages found.')
-            .setColor('#FF69B4')
-            .setTimestamp();
-
-        if (totalPages > 1) {
-            embed.setFooter({ text: `Page ${page + 1} of ${totalPages}` });
+    const ensureUser = (id) => {
+        if (!data[guildId].users[id]) {
+            data[guildId].users[id] = {
+                partner: null,
+                list: null,
+                ideology: null
+            };
         }
-
-        return embed;
     };
 
-    const row = new ActionRowBuilder();
-    if (totalPages > 1) {
-        row.addComponents(
-            new ButtonBuilder().setCustomId('prev').setLabel('⬅️').setStyle(ButtonStyle.Primary),
-            new ButtonBuilder().setCustomId('next').setLabel('➡️').setStyle(ButtonStyle.Primary)
-        );
+    ensureUser(proposer.id);
+    ensureUser(partner.id);
+
+    if (data[guildId].users[proposer.id].partner !== null) {
+        return interaction.reply({ content: `💍 You're already married!`, ephemeral: true });
     }
 
-    const embed = await generateEmbed(currentPage);
+    if (data[guildId].users[partner.id].partner !== null) {
+        return interaction.reply({ content: `💔 ${partner.username} is already married.`, ephemeral: true });
+    }
 
-    const message = await interaction.editReply({
+    let decided = false;
+
+    const getButtons = () =>
+        new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+                .setCustomId('accept')
+                .setLabel('💍 Accept')
+                .setStyle(ButtonStyle.Success)
+                .setDisabled(decided),
+
+            new ButtonBuilder()
+                .setCustomId('decline')
+                .setLabel('❌ Decline')
+                .setStyle(ButtonStyle.Danger)
+                .setDisabled(decided)
+        );
+
+    const embed = new EmbedBuilder()
+        .setTitle('💌 Marriage Proposal')
+        .setDescription(`${proposer} has proposed to ${partner}!\n\nDo you accept?`)
+        .setColor('#00AAFF')
+        .setAuthor({
+            name: proposer.username,
+            iconURL: proposer.displayAvatarURL({ dynamic: true })
+        })
+        .setTimestamp();
+
+    const msg = await interaction.reply({
+        content: `${partner}`,
         embeds: [embed],
-        components: totalPages > 1 ? [row] : []
+        components: [getButtons()],
+        fetchReply: true
     });
 
-    if (totalPages > 1) {
-        const collector = message.createMessageComponentCollector({
-            filter: i => i.user.id === interaction.user.id,
-            time: 60000
-        });
+    const collector = msg.createMessageComponentCollector({
+        componentType: ComponentType.Button,
+        time: 15000,
+        filter: i => i.user.id === partner.id
+    });
 
-        collector.on('collect', async i => {
-            await i.deferUpdate();
+    collector.on('collect', async i => {
+        decided = true;
 
-            if (i.customId === 'prev' && currentPage > 0) currentPage--;
-            if (i.customId === 'next' && currentPage < totalPages - 1) currentPage++;
+        if (i.customId === 'accept') {
+            const now = Date.now();
 
-            const updatedEmbed = await generateEmbed(currentPage);
-            await message.edit({ embeds: [updatedEmbed] });
-        });
+            data[guildId].users[proposer.id].partner = { id: partner.id, timestamp: now };
+            data[guildId].users[partner.id].partner = { id: proposer.id, timestamp: now };
+            savePeopleData(data);
 
-        collector.on('end', async () => {
-            if (message.editable) {
-                await message.edit({ components: [] }).catch(() => {});
-            }
-        });
-    }
+            await i.update({
+                content: `💖 ${proposer} and ${partner} are now married!`,
+                embeds: [],
+                components: [getButtons()]
+            });
+
+        } else if (i.customId === 'decline') {
+            await i.update({
+                content: `😔 ${partner} has declined the proposal from ${proposer}.`,
+                embeds: [],
+                components: [getButtons()]
+            });
+        }
+
+        collector.stop();
+    });
+
+    collector.on('end', async collected => {
+        if (!decided) {
+            decided = true;
+
+            await msg.edit({
+                content: `⌛ Proposal timed out. No response from ${partner}.`,
+                embeds: [],
+                components: [getButtons()]
+            }).catch(() => {});
+        }
+    });
 };
