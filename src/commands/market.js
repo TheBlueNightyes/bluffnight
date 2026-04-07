@@ -29,18 +29,32 @@ function saveJSON(file, data) {
 
 function getUserData(econData, guildId, userId) {
     if (!econData[guildId]) econData[guildId] = { users: {} };
+
     if (!econData[guildId].users[userId]) {
         econData[guildId].users[userId] = {
             crack: 0,
             fentanyl: 0,
             lastCollect: 0,
-            inventory: []
+            inventory: {
+                weapons: [],
+                items: []
+            }
         };
     }
 
-    // 🛠 Fix missing fields in old data
     const userData = econData[guildId].users[userId];
-    if (!Array.isArray(userData.inventory)) userData.inventory = [];
+
+    if (Array.isArray(userData.inventory)) {
+        userData.inventory = {
+            weapons: [],
+            items: userData.inventory
+        };
+    }
+
+    if (!userData.inventory) userData.inventory = {};
+    if (!userData.inventory.weapons) userData.inventory.weapons = [];
+    if (!userData.inventory.items) userData.inventory.items = [];
+
     if (typeof userData.crack !== 'number') userData.crack = 0;
     if (typeof userData.fentanyl !== 'number') userData.fentanyl = 0;
     if (typeof userData.lastCollect !== 'number') userData.lastCollect = 0;
@@ -107,18 +121,6 @@ export default async (interaction) => {
     const userTag = interaction.user.tag;
     const userData = getUserData(economy, guildId, userId);
 
-    if (!userData[guildId]) userData[guildId] = {};
-    if (!userData[guildId].users) userData[guildId].users = {};
-    if (!userData[guildId].users[userId]) {
-        userData[guildId].users[userId] = { 
-            crack: 0, 
-            fentanyl: 0, 
-            lastCollect: 0, 
-            inventory: [], 
-            redeemed: [] 
-        };
-    }
-
     logger.info(`market:${type} used by ${userTag}`);
 
     if (type === 'sell') {
@@ -183,7 +185,7 @@ export default async (interaction) => {
             return interaction.reply(`💸 You don’t have enough ${currencyKey} to buy this.`);
         }
 
-        userData.inventory.push({
+        userData.inventory.items.push({
             name: item.name,
             seller: item.seller,
             desc: item.desc,

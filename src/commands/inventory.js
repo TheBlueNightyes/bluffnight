@@ -6,10 +6,7 @@ import { createCommandConfig, logger } from 'robo.js';
 const ECONOMY_FILE = path.resolve('src/storage/economy.json');
 
 function loadEconomyData() {
-    if (!fs.existsSync(ECONOMY_FILE)) {
-        return {};
-    }
-
+    if (!fs.existsSync(ECONOMY_FILE)) return {};
     const raw = fs.readFileSync(ECONOMY_FILE, 'utf-8').trim();
     if (!raw) return {};
 
@@ -23,7 +20,7 @@ function loadEconomyData() {
 
 export const config = createCommandConfig({
     description: 'loaded'
-})
+});
 
 export default async (interaction) => {
     const data = loadEconomyData();
@@ -37,27 +34,56 @@ export default async (interaction) => {
             crack: 0, 
             fentanyl: 0, 
             lastCollect: 0, 
-            inventory: [], 
-            redeemed: [] 
+            inventory: {
+                weapons: [],
+                items: []
+            },
+            redeemed: []
         };
     }
 
-    const userData = data[guildId].users[userId]
-    const inventory = userData.inventory || [];
+    const userData = data[guildId].users[userId];
+
+    if (Array.isArray(userData.inventory)) {
+        userData.inventory = {
+            weapons: [],
+            items: userData.inventory
+        };
+    }
+
+    if (!userData.inventory.weapons) userData.inventory.weapons = [];
+    if (!userData.inventory.items) userData.inventory.items = [];
+
     const embed = new EmbedBuilder()
         .setTitle(`${interaction.user.username}'s Inventory`)
         .setColor('#FFD700')
         .setTimestamp();
-    if (inventory.length === 0) {
+
+    const weapons = userData.inventory.weapons;
+    const items = userData.inventory.items;
+
+    if (weapons.length === 0 && items.length === 0) {
         embed.setDescription('🧺 Your inventory is empty.');
     } else {
-        for (const item of inventory) {
+        if (weapons.length > 0) {
             embed.addFields({
-                name: item.name,
-                value: `From: ${item.seller}\nDescription: ${item.desc}\nPrice: ${item.price.toLocaleString()} ${item.currency}\nTime: ${new Date(item.boughtAt).toLocaleDateString('en-US')}`,
+                name: '🔫 Weapons',
+                value: weapons.map(w => `• ${w}`).join('\n'),
+                inline: false
+            });
+        }
+
+        if (items.length > 0) {
+            embed.addFields({
+                name: '📦 Items',
+                value: items.map(item => {
+                    if (typeof item === 'string') return `• ${item}`;
+                    return `• ${item.name}\nFrom: ${item.seller || 'Unknown'}\nPrice: ${item.price?.toLocaleString() || 'N/A'} ${item.currency || ''}`;
+                }).join('\n\n'),
                 inline: false
             });
         }
     }
+
     return interaction.reply({ embeds: [embed] });
 };
