@@ -6,13 +6,9 @@ import { createCommandConfig, logger } from 'robo.js';
 const ECONOMY_FILE = path.resolve('src/storage/economy.json');
 
 function loadEconomyData() {
-    if (!fs.existsSync(ECONOMY_FILE)) {
-        return {};
-    }
-
+    if (!fs.existsSync(ECONOMY_FILE)) return {};
     const raw = fs.readFileSync(ECONOMY_FILE, 'utf-8').trim();
     if (!raw) return {};
-
     try {
         return JSON.parse(raw);
     } catch (err) {
@@ -30,6 +26,11 @@ function saveEconomyData(data) {
     }
 }
 
+// Helper to format numbers with commas
+function formatNumber(n) {
+    return n.toLocaleString('en-US');
+}
+
 export const config = createCommandConfig({
     description: 'gamblers luck, right?',
     options: [{
@@ -41,7 +42,9 @@ export const config = createCommandConfig({
 });
 
 export default async (interaction) => {
-    logger.info(`blackjack played by ${interaction.user}`);
+    logger.info(`blackjack played by ${interaction.user.tag}`);
+
+    await interaction.deferReply();
 
     const data = loadEconomyData();
     const guildId = interaction.guild.id;
@@ -65,7 +68,7 @@ export default async (interaction) => {
     }
 
     function drawCard() {
-        const cards = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11]; 
+        const cards = [2,3,4,5,6,7,8,9,10,10,10,10,11]; 
         return cards[Math.floor(Math.random() * cards.length)];
     }
 
@@ -81,13 +84,8 @@ export default async (interaction) => {
 
     const userData = getUserData(data, guildId, userId);
 
-    if (betAmount <= 0) {
-        return interaction.reply("❌ Please enter a valid amount to bet.");
-    }
-
-    if (betAmount > userData.crack) {
-        return interaction.reply("❌ You don't have enough balance to make that bet.");
-    }
+    if (betAmount <= 0) return interaction.editReply("❌ Please enter a valid amount to bet.");
+    if (betAmount > userData.crack) return interaction.editReply(`❌ You don't have enough balance to make that bet.`);
 
     userData.crack -= betAmount;
 
@@ -96,28 +94,19 @@ export default async (interaction) => {
 
     const embed = new EmbedBuilder()
         .setTitle('🃏 Blackjack')
-        .setDescription(`Your hand: ${userHand.join(', ')} (Total: ${handTotal(userHand)})\nDealer shows: ${dealerHand[0]}\n\nChoose an action:`)
+        .setDescription(
+            `Your hand: ${userHand.join(', ')} (Total: ${handTotal(userHand)})\n` +
+            `Dealer shows: ${dealerHand[0]}\n\nChoose an action:`
+        )
         .setColor('#0099ff');
 
-    const hitButton = new ButtonBuilder()
-        .setCustomId('hit_' + userId)
-        .setLabel('Hit')
-        .setStyle(ButtonStyle.Primary);
-
-    const standButton = new ButtonBuilder()
-        .setCustomId('stand_' + userId)
-        .setLabel('Stand')
-        .setStyle(ButtonStyle.Secondary);
-
+    const hitButton = new ButtonBuilder().setCustomId('hit_' + userId).setLabel('Hit').setStyle(ButtonStyle.Primary);
+    const standButton = new ButtonBuilder().setCustomId('stand_' + userId).setLabel('Stand').setStyle(ButtonStyle.Secondary);
     const row = new ActionRowBuilder().addComponents(hitButton, standButton);
 
-    const msg = await interaction.reply({ embeds: [embed], components: [row], fetchReply: true });
+    const msg = await interaction.editReply({ embeds: [embed], components: [row], fetchReply: true });
 
-    const gameState = {
-        userHand,
-        dealerHand,
-        userId
-    };
+    const gameState = { userHand, dealerHand, userId };
 
     const collector = msg.createMessageComponentCollector({
         componentType: ComponentType.Button,
@@ -127,7 +116,6 @@ export default async (interaction) => {
 
     collector.on('collect', async i => {
         if (i.user.id !== userId) return;
-
         const userTotal = handTotal(gameState.userHand);
 
         if (i.customId.startsWith('hit_')) {
@@ -135,9 +123,12 @@ export default async (interaction) => {
             const newTotal = handTotal(gameState.userHand);
 
             if (newTotal > 21) {
-                // Busted
                 const bustEmbed = EmbedBuilder.from(embed)
-                    .setDescription(`Your hand: ${gameState.userHand.join(', ')} (Total: ${newTotal})\nDealer shows: ${gameState.dealerHand[0]}\n\n💥 You busted! ${betAmount} lost. ${userData.crack} left`)
+                    .setDescription(
+                        `Your hand: ${gameState.userHand.join(', ')} (Total: ${newTotal})\n` +
+                        `Dealer shows: ${gameState.dealerHand[0]}\n\n💥 You busted! **${formatNumber(betAmount)}** lost. ` +
+                        `Balance: **${formatNumber(userData.crack)}**`
+                    )
                     .setColor('#FF0000');
                 
                 await i.update({ embeds: [bustEmbed], components: [] });
@@ -145,29 +136,25 @@ export default async (interaction) => {
                 collector.stop('finished');
 
             } else if (newTotal === 21) {
-                // Hit 21 → auto-stand
                 await handleStand(i);
-
             } else {
-                // Still under 21
                 const midEmbed = EmbedBuilder.from(embed)
-                    .setDescription(`Your hand: ${gameState.userHand.join(', ')} (Total: ${newTotal})\nDealer shows: ${gameState.dealerHand[0]}\n\nChoose an action:`);
-
+                    .setDescription(
+                        `Your hand: ${gameState.userHand.join(', ')} (Total: ${newTotal})\n` +
+                        `Dealer shows: ${gameState.dealerHand[0]}\n\nChoose an action:`
+                    );
                 await i.update({ embeds: [midEmbed], components: [row] });
             }
 
             saveEconomyData(data);
 
         } else if (i.customId.startsWith('stand_')) {
-            // Player clicked stand
             await handleStand(i);
         }
     });
 
-    // Helper function for standing (dealer plays)
     async function handleStand(i) {
         let dealerTotal = handTotal(gameState.dealerHand);
-
         while (dealerTotal < 17) {
             gameState.dealerHand.push(drawCard());
             dealerTotal = handTotal(gameState.dealerHand);
@@ -178,18 +165,18 @@ export default async (interaction) => {
         let embedColor;
 
         if (userTotal > 21) {
-            resultMessage = `💥 You busted! ${betAmount} lost. ${userData.crack} left`;
+            resultMessage = `💥 You busted! **${formatNumber(betAmount)}** lost.\n Your new balance: **${formatNumber(userData.crack)} crack**`;
             embedColor = '#FF0000';
         } else if (dealerTotal > 21 || userTotal > dealerTotal) {
             userData.crack += betAmount * 2;
-            resultMessage = `🎉 You win! ${betAmount} won! ${userData.crack} left`;
+            resultMessage = `🎉 You win! **${formatNumber(betAmount)}** won!\n Your new balance: **${formatNumber(userData.crack)} crack**`;
             embedColor = '#00cc99';
         } else if (userTotal < dealerTotal) {
-            resultMessage = `😞 You lose. ${betAmount} lost. ${userData.crack} left`;
+            resultMessage = `😞 You lose. **${formatNumber(betAmount)}** lost.\n Your new balance: **${formatNumber(userData.crack)} crack**`;
             embedColor = '#FF0000';
         } else {
-            userData.crack += betAmount; // Refund on tie
-            resultMessage = `🤝 It's a tie! ${betAmount} returned. ${userData.crack} left`;
+            userData.crack += betAmount;
+            resultMessage = `🤝 It's a tie! **${formatNumber(betAmount)}** returned.\n Your new balance: **${formatNumber(userData.crack)} crack**`;
             embedColor = '#00cc99';
         }
 
@@ -197,7 +184,11 @@ export default async (interaction) => {
 
         const finalEmbed = new EmbedBuilder()
             .setTitle('🃏 Blackjack - Results')
-            .setDescription(`Your hand: ${gameState.userHand.join(', ')} (Total: ${userTotal})\nDealer hand: ${gameState.dealerHand.join(', ')} (Total: ${dealerTotal})\n\n${resultMessage}`)
+            .setDescription(
+                `Your hand: ${gameState.userHand.join(', ')} (Total: ${userTotal})\n` +
+                `Dealer hand: ${gameState.dealerHand.join(', ')} (Total: ${dealerTotal})\n\n` +
+                resultMessage
+            )
             .setColor(embedColor);
 
         await i.update({ embeds: [finalEmbed], components: [] });
@@ -210,4 +201,4 @@ export default async (interaction) => {
             await msg.edit({ embeds: [timeoutEmbed], components: [] });
         }
     });
-}
+};
