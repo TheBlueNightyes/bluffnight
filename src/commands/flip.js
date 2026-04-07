@@ -78,19 +78,18 @@ export default async (interaction) => {
     // GUESS WITHOUT BET
     if (!amount || amount <= 0) {
         const win = result === sideGuess;
-
         return interaction.reply(
             `🪙 You guessed **${sideGuess}** and the coin landed on **${result}**.\n\n` +
-            `${win ? "🎉 You guessed correctly!" : "❌ Wrong guess!"}`
+            `${win ? "✅ You guessed correctly!" : "❌ Wrong guess!"}`
         );
     }
 
     // BETTING LOGIC
     if (userData.crack < amount) {
-        return interaction.reply(`You don't have enough crack to bet **${amount}**.`);
+        return interaction.reply(`❌ You don't have enough crack to bet **${amount}**.`);
     }
 
-    let win = result === sideGuess;
+    const win = result === sideGuess;
 
     if (win) {
         userData.crack += amount;
@@ -105,7 +104,7 @@ export default async (interaction) => {
         .setColor(win ? '#00FF00' : '#FF0000')
         .setDescription(
             `You guessed **${sideGuess}** and the coin landed on **${result}**.\n\n` +
-            `You ${win ? `won` : `lost`} **${amount} crack**.\n` +
+            `${win ? "✅ You won" : "❌ You lost"} **${amount} crack**.\n` +
             `Your new balance: **${userData.crack} crack**`
         )
         .setTimestamp();
