@@ -21,8 +21,8 @@ const weapons = [
     { name: "Shotgun", rarity: "common", cost: { steel: 8000, chromium: 1000 }, crack: 200000, fentanyl: 100 },
     { name: "Sniper", rarity: "rare", cost: { steel: 8000, chromium: 2500 }, crack: 300000, fentanyl: 250 },
     { name: "LMG", rarity: "rare", cost: { steel: 11500, chromium: 4000, tungsten: 50 }, crack: 50000000, fentanyl: 400 },
-    { name: "Flamethrower", rarity: "epic", cost: { steel: 18000, chromium: 4000, tungsten: 3000 }, crack: 80000000, fentanyl: 750 },
-    { name: "Railgun", rarity: "epic", cost: { tungsten: 9000, uranium: 5000 }, crack: 120000000, fentanyl: 1200 },
+    { name: "Flamethrower", rarity: "epic", cost: { steel: 10000, chromium: 3000, tungsten: 3000 }, crack: 80000000, fentanyl: 750 },
+    { name: "Railgun", rarity: "epic", cost: { tungsten: 9000, uranium: 4000 }, crack: 120000000, fentanyl: 1200 },
     { name: "Tank", rarity: "legendary", cost: { steel: 14500, chromium: 8500, tungsten: 6700, uranium: 8900 }, crack: 300000000, fentanyl: 2500 },
     { name: "Nuke", rarity: "legendary", cost: { plutonium: 35000, uranium: 40000 }, crack: 50000000000, fentanyl: 5000 }
 ];
