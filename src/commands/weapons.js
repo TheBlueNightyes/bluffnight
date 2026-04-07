@@ -50,12 +50,17 @@ export default async (interaction) => {
     }
 
     const userData = data[guildId].users[userId];
-    let currentPage = 0;
 
-    const getColor = r => r === 'common' ? '#00FF00' :
-                           r === 'rare' ? '#0099FF' :
-                           r === 'epic' ? '#9933FF' :
-                           '#FF0000';
+    if (Array.isArray(userData.inventory)) {
+        userData.inventory = {
+            weapons: userData.inventory,
+            items: []
+        };
+    }
+
+    if (!userData.inventory.weapons) userData.inventory.weapons = [];
+
+    let currentPage = 0;
 
     const formatCost = (cost) => {
         return Object.entries(cost).map(([mat, val]) => {
@@ -67,7 +72,7 @@ export default async (interaction) => {
 
     const generateEmbed = () => {
         const weapon = weapons[currentPage];
-        const owned = userData.inventory.includes(weapon.name);
+        const owned = userData.inventory.weapons.includes(weapon.name);
 
         return new EmbedBuilder()
             .setTitle(`${owned ? '✅' : '❌'} ${weapon.name}`)
@@ -107,7 +112,7 @@ export default async (interaction) => {
         if (i.customId === 'next' && currentPage < weapons.length - 1) currentPage++;
 
         if (i.customId.startsWith('buy')) {
-            if (userData.inventory.includes(weapon.name)) {
+            if (userData.inventory.weapons.includes(weapon.name)) {
                 return interaction.followUp({ content: 'Already owned', ephemeral: true });
             }
 
@@ -138,7 +143,7 @@ export default async (interaction) => {
                 userData.fentanyl -= weapon.fentanyl;
             }
 
-            userData.inventory.push(weapon.name);
+            userData.inventory.weapons.push(weapon.name);
             saveEconomyData(data);
 
             return interaction.followUp({
