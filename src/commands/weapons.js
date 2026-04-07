@@ -70,23 +70,23 @@ export default async (interaction) => {
         const owned = userData.inventory.includes(weapon.name);
 
         return new EmbedBuilder()
-            .setTitle(`🔫 ${weapon.name} ${owned ? '✅ OWNED' : ''}`)
+            .setTitle(`${owned ? '✅' : '❌'} ${weapon.name}`)
             .setDescription(
                 `**Rarity:** ${weapon.rarity}\n\n` +
                 `**Materials:**\n${formatCost(weapon.cost)}\n\n` +
                 `**Skip Cost:**\n• Crack: ${weapon.crack.toLocaleString()}\n• Fent: ${weapon.fentanyl.toLocaleString()}`
             )
-            .setColor(getColor(weapon.rarity))
-            .setFooter({ text: `Weapon ${currentPage + 1} of ${weapons.length}` })
+            .setColor(owned ? '#00FF00' : '#FF0000') // green if unlocked, red if not
+            .setFooter({ text: `Weapon ${currentPage + 1}/${weapons.length}` })
             .setTimestamp();
     };
 
     const buttons = () => new ActionRowBuilder().addComponents(
-        new ButtonBuilder().setCustomId('prev').setLabel('⬅️').setStyle(ButtonStyle.Primary),
+        new ButtonBuilder().setCustomId('prev').setLabel('◀').setStyle(ButtonStyle.Primary),
         new ButtonBuilder().setCustomId('buy_mat').setLabel('Materials').setStyle(ButtonStyle.Success),
         new ButtonBuilder().setCustomId('buy_crack').setLabel('Crack').setStyle(ButtonStyle.Secondary),
         new ButtonBuilder().setCustomId('buy_fent').setLabel('Fent').setStyle(ButtonStyle.Danger),
-        new ButtonBuilder().setCustomId('next').setLabel('➡️').setStyle(ButtonStyle.Primary)
+        new ButtonBuilder().setCustomId('next').setLabel('▶').setStyle(ButtonStyle.Primary)
     );
 
     const msg = await interaction.editReply({
