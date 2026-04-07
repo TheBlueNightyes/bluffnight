@@ -23,8 +23,8 @@ const weapons = [
     { name: "LMG", rarity: "rare", cost: { steel: 11500, chromium: 4000, tungsten: 50 }, crack: 50000000, fentanyl: 400 },
     { name: "Flamethrower", rarity: "epic", cost: { steel: 10000, chromium: 3000, tungsten: 3000 }, crack: 80000000, fentanyl: 750 },
     { name: "Railgun", rarity: "epic", cost: { tungsten: 9000, uranium: 4000 }, crack: 120000000, fentanyl: 1200 },
-    { name: "Tank", rarity: "legendary", cost: { steel: 14500, chromium: 8500, tungsten: 6700, uranium: 8900 }, crack: 300000000, fentanyl: 2500 },
-    { name: "Nuke", rarity: "legendary", cost: { plutonium: 35000, uranium: 40000 }, crack: 50000000000, fentanyl: 5000 }
+    { name: "Tank", rarity: "legendary", cost: { steel: 16000, chromium: 9000, tungsten: 6700, uranium: 8900 }, crack: 300000000, fentanyl: 2500 },
+    { name: "Nuke", rarity: "legendary", cost: { plutonium: 50000, uranium: 55000 }, crack: 50000000000, fentanyl: 5000 }
 ];
 
 export const config = createCommandConfig({
