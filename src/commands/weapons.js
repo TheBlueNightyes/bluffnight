@@ -123,7 +123,7 @@ export default async (interaction) => {
                     if ((userData.materials[mat] || 0) < val) can = false;
                 }
 
-                if (!can) return interaction.followUp({ content: 'Missing materials', ephemeral: true });
+                if (!can) return interaction.followUp({ content: '💸 You don’t have enough materials to buy this.', ephemeral: true });
 
                 for (const [mat, val] of Object.entries(weapon.cost)) {
                     userData.materials[mat] -= val;
@@ -132,14 +132,14 @@ export default async (interaction) => {
 
             if (i.customId === 'buy_crack') {
                 if (userData.crack < weapon.crack)
-                    return interaction.followUp({ content: 'Not enough crack', ephemeral: true });
+                    return interaction.followUp({ content: '💸 You don’t have enough crack to buy this.', ephemeral: true });
 
                 userData.crack -= weapon.crack;
             }
 
             if (i.customId === 'buy_fent') {
                 if (userData.fentanyl < weapon.fentanyl)
-                    return interaction.followUp({ content: 'Not enough fent', ephemeral: true });
+                    return interaction.followUp({ content: '💸 You don’t have enough fent to buy this.', ephemeral: true });
 
                 userData.fentanyl -= weapon.fentanyl;
             }
@@ -148,7 +148,7 @@ export default async (interaction) => {
             saveEconomyData(data);
 
             return interaction.followUp({
-                content: `Purchased ${weapon.name}`,
+                content: `✅ You bought **${weapon.name}**`,
                 ephemeral: true
             });
         }
