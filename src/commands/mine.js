@@ -53,44 +53,46 @@ export default (interaction) => {
     const material = interaction.options.getString('material');
     logger.info(`${material} harvested by ${interaction.user}`);
 
-    const data = loadEconomyData();
-    const guildId = interaction.guild.id;
-    const userId = interaction.user.id;
+	interaction.reply(`mines r closed`)
 
-    if (!data[guildId]) data[guildId] = {};
-    if (!data[guildId].users) data[guildId].users = {};
-    if (!data[guildId].users[userId]) {
-        data[guildId].users[userId] = { 
-            materials: {},
-            lastCollect: 0,
-            inventory: [],
-            redeemed: []
-        };
-    }
+    // const data = loadEconomyData();
+    // const guildId = interaction.guild.id;
+    // const userId = interaction.user.id;
 
-    if (!data[guildId].users[userId].materials) {
-        data[guildId].users[userId].materials = {};
-    }
+    // if (!data[guildId]) data[guildId] = {};
+    // if (!data[guildId].users) data[guildId].users = {};
+    // if (!data[guildId].users[userId]) {
+    //     data[guildId].users[userId] = { 
+    //         materials: {},
+    //         lastCollect: 0,
+    //         inventory: [],
+    //         redeemed: []
+    //     };
+    // }
 
-    if (!data[guildId].users[userId].materials[material]) {
-        data[guildId].users[userId].materials[material] = 0;
-    }
+    // if (!data[guildId].users[userId].materials) {
+    //     data[guildId].users[userId].materials = {};
+    // }
 
-    const rewards = [
-        5, 10, 25, 50
-    ];
+    // if (!data[guildId].users[userId].materials[material]) {
+    //     data[guildId].users[userId].materials[material] = 0;
+    // }
 
-    const reward = rewards[Math.floor(Math.random() * rewards.length)];
+    // const rewards = [
+    //     5, 10, 25, 50
+    // ];
 
-    data[guildId].users[userId].materials[material] += reward;
+    // const reward = rewards[Math.floor(Math.random() * rewards.length)];
 
-    saveEconomyData(data);
+    // data[guildId].users[userId].materials[material] += reward;
 
-    const embed = new EmbedBuilder()
-        .setTitle('Harvest Complete!')
-        .setColor('#00BFFF')
-        .setDescription(`${interaction.user}, you harvested **${reward.toLocaleString()}** ${material}!`)
-        .setTimestamp();
+    // saveEconomyData(data);
 
-    interaction.reply({ embeds: [embed] });
+    // const embed = new EmbedBuilder()
+    //     .setTitle('Harvest Complete!')
+    //     .setColor('#00BFFF')
+    //     .setDescription(`${interaction.user}, you harvested **${reward.toLocaleString()}** ${material}!`)
+    //     .setTimestamp();
+
+    // interaction.reply({ embeds: [embed] });
 };
