@@ -53,12 +53,13 @@ export default async (interaction) => {
 
     if (Array.isArray(userData.inventory)) {
         userData.inventory = {
-            weapons: userData.inventory,
-            items: []
+            weapons: [],
+            items: userData.inventory
         };
     }
 
     if (!userData.inventory.weapons) userData.inventory.weapons = [];
+    if (!userData.inventory.items) userData.inventory.items = [];
 
     let currentPage = 0;
 
