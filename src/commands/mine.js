@@ -53,46 +53,44 @@ export default (interaction) => {
     const material = interaction.options.getString('material');
     logger.info(`${material} harvested by ${interaction.user}`);
 
-	interaction.reply(`mines r closed`)
+    const data = loadEconomyData();
+    const guildId = interaction.guild.id;
+    const userId = interaction.user.id;
 
-    // const data = loadEconomyData();
-    // const guildId = interaction.guild.id;
-    // const userId = interaction.user.id;
+    if (!data[guildId]) data[guildId] = {};
+    if (!data[guildId].users) data[guildId].users = {};
+    if (!data[guildId].users[userId]) {
+        data[guildId].users[userId] = { 
+            materials: {},
+            lastCollect: 0,
+            inventory: [],
+            redeemed: []
+        };
+    }
 
-    // if (!data[guildId]) data[guildId] = {};
-    // if (!data[guildId].users) data[guildId].users = {};
-    // if (!data[guildId].users[userId]) {
-    //     data[guildId].users[userId] = { 
-    //         materials: {},
-    //         lastCollect: 0,
-    //         inventory: [],
-    //         redeemed: []
-    //     };
-    // }
+    if (!data[guildId].users[userId].materials) {
+        data[guildId].users[userId].materials = {};
+    }
 
-    // if (!data[guildId].users[userId].materials) {
-    //     data[guildId].users[userId].materials = {};
-    // }
+    if (!data[guildId].users[userId].materials[material]) {
+        data[guildId].users[userId].materials[material] = 0;
+    }
 
-    // if (!data[guildId].users[userId].materials[material]) {
-    //     data[guildId].users[userId].materials[material] = 0;
-    // }
+    const rewards = [
+        5, 10, 25, 50
+    ];
 
-    // const rewards = [
-    //     5, 10, 25, 50
-    // ];
+    const reward = rewards[Math.floor(Math.random() * rewards.length)];
 
-    // const reward = rewards[Math.floor(Math.random() * rewards.length)];
+    data[guildId].users[userId].materials[material] += reward;
 
-    // data[guildId].users[userId].materials[material] += reward;
+    saveEconomyData(data);
 
-    // saveEconomyData(data);
+    const embed = new EmbedBuilder()
+        .setTitle('Harvest Complete!')
+        .setColor('#00BFFF')
+        .setDescription(`${interaction.user}, you harvested **${reward.toLocaleString()}** ${material}!`)
+        .setTimestamp();
 
-    // const embed = new EmbedBuilder()
-    //     .setTitle('Harvest Complete!')
-    //     .setColor('#00BFFF')
-    //     .setDescription(`${interaction.user}, you harvested **${reward.toLocaleString()}** ${material}!`)
-    //     .setTimestamp();
-
-    // interaction.reply({ embeds: [embed] });
+    interaction.reply({ embeds: [embed] });
 };
