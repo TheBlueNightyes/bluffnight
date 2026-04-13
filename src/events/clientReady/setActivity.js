@@ -1,4 +1,5 @@
 import { ActivityType } from 'discord.js'
+import { startStockUpdater } from '../../systems/stockUpdater.js'
 
 export default async function(client) {
     if (client.user) {
@@ -9,4 +10,6 @@ export default async function(client) {
     }
 
     console.log(`Activity set for ${client.user?.tag}`)
+
+    startStockUpdater()
 }
