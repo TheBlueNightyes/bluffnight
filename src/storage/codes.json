@@ -1,0 +1,52 @@
+{
+  "JUL74TH": {
+    "crack": 2000,
+    "fentanyl": 50,
+    "redeemed": [
+      "670646662808469536"
+    ],
+    "expires": "2025-07-5T23:59:59Z"
+  },
+  "UPDATE!!": {
+    "crack": 1000,
+    "fentanyl": 3,
+    "expires": "2025-07-9T23:59:59Z"
+  },
+  "WORTHTHEWAIT": {
+    "crack": 400,
+    "expires": "2025-07-9T23:59:59Z"
+  },
+  "HAPPYBDAYRN": {
+    "fentanyl": 1000,
+    "expires": "2025-09-21T23:59:59Z"
+  },
+  "LOVEBLUFFNIGHT": {
+    "crack": 6000,
+    "expires": "2025-10-3T23:59:59Z"
+  },
+  "HALLOWEEN": {
+    "crack": 3500,
+    "fentanyl": 7,
+    "expires": "2025-11-15T23:59:59Z"
+  },
+  "MERRY2025": {
+    "crack": 10000,
+    "fentanyl": 500,
+    "expires": "2025-12-31T23:59:59Z"
+  },
+  "HAPPYBIRTHDAYBLUFFNIGHT!": {
+    "crack": 100000,
+    "fentanyl": 2800,
+    "expires": "2025-12-31T23:59:59Z"
+  },
+  "NEWYEAR2026": {
+    "crack": 150000,
+    "fentanyl": 3500,
+    "expires": "2026-01-7T23:59:59Z"
+  },
+  "ILOVETRIPLET": {
+    "crack": 1,
+    "fentanyl": 1000,
+    "expires": "2026-04-7T23:59:59Z"
+  }
+}
