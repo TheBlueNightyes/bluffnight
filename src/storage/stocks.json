@@ -1,7 +1,7 @@
 {
   "APPLE": {
     "name": "Apple",
-    "price": 61169.27,
+    "price": 63484.74,
     "trend": 1.01,
     "volatility": 0.03,
     "demandPressure": 0,
@@ -30,13 +30,14 @@
       61272.88,
       60947.74,
       60720.61,
-      61169.27
+      61169.27,
+      63484.74
     ],
     "category": "tech"
   },
   "TESLA": {
     "name": "Tesla",
-    "price": 59015.04,
+    "price": 57391.82,
     "trend": 1.02,
     "volatility": 0.06,
     "demandPressure": 0,
@@ -65,13 +66,14 @@
       59538.08,
       59144,
       59733.34,
-      59015.04
+      59015.04,
+      57391.82
     ],
     "category": "automotive"
   },
   "BITCOIN": {
     "name": "Bitcoin",
-    "price": 49314.3,
+    "price": 50476.18,
     "trend": 1,
     "volatility": 0.1,
     "demandPressure": 0,
@@ -100,13 +102,14 @@
       52070.09,
       52014.16,
       51041.66,
-      49314.3
+      49314.3,
+      50476.18
     ],
     "category": "crypto"
   },
   "DISCORD": {
     "name": "Discord",
-    "price": 58872.7,
+    "price": 59294.22,
     "trend": 1.015,
     "volatility": 0.04,
     "demandPressure": 0,
@@ -135,13 +138,14 @@
       61700.63,
       60398.63,
       59468.45,
-      58872.7
+      58872.7,
+      59294.22
     ],
     "category": "social"
   },
   "BLUFFNIGHT LOVERS": {
     "name": "bluffnight lovers",
-    "price": 57487.35,
+    "price": 56440.92,
     "trend": 1.015,
     "volatility": 0.04,
     "demandPressure": 0,
@@ -170,13 +174,14 @@
       59212.06,
       59289.12,
       58191.07,
-      57487.35
+      57487.35,
+      56440.92
     ],
     "category": "social"
   },
   "GOONCORE": {
     "name": "GoonCore",
-    "price": 67545.41,
+    "price": 66107.55,
     "trend": 1.015,
     "volatility": 0.04,
     "demandPressure": 0,
@@ -205,13 +210,14 @@
       67401.29,
       67102.04,
       67578.45,
-      67545.41
+      67545.41,
+      66107.55
     ],
     "category": "social"
   },
   "FREEROBUX": {
     "name": "Free Robux",
-    "price": 60907.95,
+    "price": 60706.63,
     "trend": 1.015,
     "volatility": 0.04,
     "demandPressure": 0,
@@ -240,13 +246,14 @@
       61041.43,
       60467.27,
       61482.61,
-      60907.95
+      60907.95,
+      60706.63
     ],
     "category": "social"
   },
   "EMBEZZLEMENT": {
     "name": "Embezzlement",
-    "price": 63814.39,
+    "price": 63788.11,
     "trend": 1.015,
     "volatility": 0.04,
     "demandPressure": 0,
@@ -275,13 +282,14 @@
       63302.76,
       62143.5,
       63190.99,
-      63814.39
+      63814.39,
+      63788.11
     ],
     "category": "social"
   },
   "DEMOCRACKY": {
     "name": "Democracky",
-    "price": 62978.7,
+    "price": 62730.77,
     "trend": 1.015,
     "volatility": 0.04,
     "demandPressure": 0,
@@ -310,7 +318,8 @@
       63206.24,
       62252.87,
       63479.17,
-      62978.7
+      62978.7,
+      62730.77
     ],
     "category": "social"
   }
