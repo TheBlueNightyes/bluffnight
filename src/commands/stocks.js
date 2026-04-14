@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { EmbedBuilder } from 'discord.js';
-import { createCommandConfig, logger } from 'robo.js';
+import { createCommandConfig } from 'robo.js';
 import { generateStockChart } from '../systems/stockChart.js';
 
 const STOCKS_FILE = path.resolve('src/storage/stocks.json');
@@ -15,6 +15,17 @@ function loadJSON(file) {
 
 function saveJSON(file, data) {
     fs.writeFileSync(file, JSON.stringify(data, null, 2));
+}
+
+function createResponder(interaction) {
+    let replied = false;
+
+    return async (payload) => {
+        if (replied) return;
+        replied = true;
+
+        return interaction.reply(payload);
+    };
 }
 
 export const config = createCommandConfig({
@@ -47,6 +58,8 @@ export const config = createCommandConfig({
 });
 
 export default async (interaction) => {
+    const respond = createResponder(interaction);
+
     const mode = interaction.options.getString('mode');
     const stockId = interaction.options.getString('stock')?.toUpperCase();
     const amount = interaction.options.getInteger('amount');
@@ -86,64 +99,42 @@ export default async (interaction) => {
 
         stockArray.sort((a, b) => b.change - a.change);
 
-    if (stockId) {
-        const stock = stocks[stockId];
-        if (!stock) {
-            return interaction.reply({ content: 'Stock not found.', ephemeral: true });
+        if (stockId) {
+            const stock = stocks[stockId];
+            if (!stock) return respond({ content: 'Stock not found.', ephemeral: true });
+
+            const history = stock.history || [];
+
+            const holding = user.stocks?.[stockId] || { shares: 0, avgPrice: 0 };
+
+            const shares = holding.shares;
+            const avgPrice = holding.avgPrice;
+
+            const profit = (stock.price * shares) - (avgPrice * shares);
+
+            const profitEmoji =
+                profit > 0 ? '📈' :
+                profit < 0 ? '📉' : '➖';
+
+            const embed = new EmbedBuilder()
+                .setTitle(`📈 ${stock.name}`)
+                .setColor(0x00b0f4)
+                .addFields(
+                    { name: 'Price', value: `${stock.price.toFixed(2)} crack`, inline: true },
+                    { name: 'Trend', value: `${stock.trend}`, inline: true },
+
+                    { name: '📦 Your Shares', value: `${shares}`, inline: true },
+                    { name: '💰 Avg Buy Price', value: `${avgPrice.toFixed(2)} crack`, inline: true },
+                    { name: '📊 Profit / Loss', value: `${profitEmoji} ${profit.toFixed(2)} crack`, inline: true }
+                );
+
+            const chartBuffer = generateStockChart(history);
+
+            return respond({
+                embeds: [embed.setImage('attachment://chart.png')],
+                files: [{ attachment: chartBuffer, name: 'chart.png' }]
+            });
         }
-
-        const history = stock.history || [];
-
-        const holding = user.stocks?.[stockId] || {
-            shares: 0,
-            avgPrice: 0
-        };
-
-        const shares = holding.shares;
-        const avgPrice = holding.avgPrice;
-
-        const currentValue = stock.price * shares;
-        const costBasis = avgPrice * shares;
-        const profit = currentValue - costBasis;
-
-        const profitEmoji =
-            profit > 0 ? '📈' :
-            profit < 0 ? '📉' : '➖';
-
-        const oldPrice = history.length > 1
-            ? history[history.length - 2]
-            : stock.price;
-
-        const change = ((stock.price - oldPrice) / oldPrice) * 100;
-
-        const embed = new EmbedBuilder()
-            .setTitle(`📈 ${stock.name}`)
-            .setColor(0x00b0f4)
-            .addFields(
-                { name: 'Price', value: `${stock.price.toFixed(2)} crack`, inline: true },
-                { name: '24h-ish Change', value: `${change.toFixed(2)}%`, inline: true },
-                { name: 'Trend', value: `${stock.trend}`, inline: true },
-
-                { name: '📦 Your Shares', value: `${shares}`, inline: true },
-                { name: '💰 Avg Buy Price', value: `${avgPrice.toFixed(2)} crack`, inline: true },
-                { name: '📊 Profit / Loss', value: `${profitEmoji} ${profit.toFixed(2)} crack`, inline: true }
-            )
-            .setTimestamp();
-
-        const chartBuffer = generateStockChart(history);
-
-        return interaction.reply({
-            embeds: [
-                embed.setImage('attachment://chart.png')
-            ],
-            files: [
-                {
-                    attachment: chartBuffer,
-                    name: 'chart.png'
-                }
-            ]
-        });
-    }
 
         const description = stockArray.map((stock, index) => {
             const emoji =
@@ -152,37 +143,34 @@ export default async (interaction) => {
 
             return `**${index + 1}. ${stock.name}** ${emoji} ${stock.price.toFixed(2)} crack • ${stock.change.toFixed(2)}%`;
         }).join('\n\n');
-        
-        return interaction.reply({
+
+        return respond({
             embeds: [
                 new EmbedBuilder()
                     .setTitle('📊 Stock Market')
                     .setDescription(description)
                     .setColor(0x00b0f4)
-                    .setTimestamp()
             ]
         });
     }
 
     if (mode === 'buy') {
         if (!stockId || !amount) {
-            return interaction.reply({ content: 'Usage: /stocks buy <stock> <amount>', ephemeral: true });
+            return respond({ content: 'Usage: /stocks buy <stock> <amount>', ephemeral: true });
         }
 
         const stock = stocks[stockId];
-        if (!stock) {
-            return interaction.reply({ content: 'Stock not found.', ephemeral: true });
-        }
+        if (!stock) return respond({ content: 'Stock not found.', ephemeral: true });
 
         const cost = stock.price * amount;
 
         if ((user.crack ?? 0) < cost) {
-            return interaction.reply({
+            return respond({
                 embeds: [
                     new EmbedBuilder()
                         .setTitle('Insufficient Funds')
                         .setColor('#FF5555')
-                        .setDescription(`You don't have enough crack to invest ${amount}.`)
+                        .setDescription(`Not enough crack.`)
                 ],
                 ephemeral: true
             });
@@ -206,18 +194,15 @@ export default async (interaction) => {
         holding.avgPrice = totalCost / holding.shares;
 
         const rawImpact = Math.log10(amount + 1) * 0.01;
-        const finalImpact = Math.min(rawImpact, 0.08); // max 8%
+        const finalImpact = Math.min(rawImpact, 0.08);
 
         stock.price *= (1 + finalImpact);
-
         stock.price = Math.max(1, Math.min(stock.price, 1_000_000));
         stock.price = Number(stock.price.toFixed(2));
 
-        const totalSpent = prePrice * amount;
-
         saveJSON(ECONOMY_FILE, economy);
 
-        return interaction.reply({
+        return respond({
             embeds: [
                 new EmbedBuilder()
                     .setTitle('📈 Stock Purchase')
@@ -225,11 +210,7 @@ export default async (interaction) => {
                     .addFields(
                         { name: 'Stock', value: `${stockId}`, inline: true },
                         { name: 'Shares Bought', value: `${amount}`, inline: true },
-                        { name: 'Price Per Share', value: `${prePrice.toFixed(2)} crack`, inline: true },
-
-                        { name: 'Impact', value: `+${(finalImpact * 100).toFixed(3)}%`, inline: true },
-                        { name: 'Total Spent', value: `${totalSpent.toLocaleString()} crack`, inline: true },
-                        { name: 'New Balance', value: `${user.crack.toLocaleString()} crack`, inline: true }
+                        { name: 'Impact', value: `+${(finalImpact * 100).toFixed(3)}%`, inline: true }
                     )
             ]
         });
@@ -237,28 +218,24 @@ export default async (interaction) => {
 
     if (mode === 'sell') {
         if (!stockId || !amount) {
-            return interaction.reply({ content: 'Usage: /stocks sell <stock> <amount>', ephemeral: true });
+            return respond({ content: 'Usage: /stocks sell <stock> <amount>', ephemeral: true });
         }
 
         const stock = stocks[stockId];
-        if (!stock) {
-            return interaction.reply({ content: 'Stock not found.', ephemeral: true });
-        }
-
-        const prePrice = stock.price;
+        if (!stock) return respond({ content: 'Stock not found.', ephemeral: true });
 
         const holding = user.stocks[stockId];
         if (!holding || holding.shares < amount) {
-            return interaction.reply({ content: 'Not enough shares.', ephemeral: true });
+            return respond({ content: 'Not enough shares.', ephemeral: true });
         }
 
+        const prePrice = stock.price;
         const revenue = prePrice * amount;
 
         const rawImpact = Math.log10(amount + 1) * 0.01;
         const finalImpact = Math.min(rawImpact, 0.08);
 
         stock.price *= (1 - finalImpact);
-
         stock.price = Math.max(1, Math.min(stock.price, 1_000_000));
         stock.price = Number(stock.price.toFixed(2));
 
@@ -272,9 +249,7 @@ export default async (interaction) => {
 
         saveJSON(ECONOMY_FILE, economy);
 
-        const newBalance = user.crack;
-
-        return interaction.reply({
+        return respond({
             embeds: [
                 new EmbedBuilder()
                     .setTitle('📉 Stock Sale')
@@ -282,12 +257,9 @@ export default async (interaction) => {
                     .addFields(
                         { name: 'Stock', value: `${stockId}`, inline: true },
                         { name: 'Shares Sold', value: `${amount}`, inline: true },
-                        { name: 'Price Per Share', value: `${prePrice.toFixed(2)} crack`, inline: true },
-                        { name: 'Total Earned', value: `${revenue.toLocaleString()} crack`, inline: false },
-                        { name: 'New Balance', value: `${newBalance.toLocaleString()} crack`, inline: false }
+                        { name: 'Earned', value: `${revenue.toLocaleString()} crack`, inline: true }
                     )
-                    .setTimestamp()
             ]
         });
     }
-}
+};
