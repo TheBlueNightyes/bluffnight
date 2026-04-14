@@ -233,7 +233,17 @@ export default async (interaction) => {
         }
 
         const prePrice = stock.price;
-        const revenue = prePrice * amount;
+
+        const costBasis = holding.avgPrice * amount;
+        const marketValue = prePrice * amount;
+
+        const profit = marketValue - costBasis;
+
+        const profitEmoji =
+            profit > 0 ? '📈' :
+            profit < 0 ? '📉' : '➖';
+
+        const revenue = marketValue;
 
         const rawImpact = Math.log10(amount + 1) * 0.01;
         const finalImpact = Math.min(rawImpact, 0.08);
@@ -249,15 +259,7 @@ export default async (interaction) => {
         }
 
         user.crack += revenue;
-
         saveJSON(ECONOMY_FILE, economy);
-
-        const costBasis = holding.avgPrice * amount;
-        const profit = revenue - costBasis;
-
-        const profitEmoji =
-            profit > 0 ? '📈' :
-            profit < 0 ? '📉' : '➖';
 
         return respond({
             embeds: [
