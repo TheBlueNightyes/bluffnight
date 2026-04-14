@@ -269,7 +269,7 @@ export default async (interaction) => {
                     .addFields(
                         { name: 'Stock', value: `${stockId}`, inline: true },
                         { name: 'Shares Sold', value: `${amount}`, inline: true },
-                        { name: 'Price Per Share', value: `${prePrice.toFixed(2)} crack`, inline: true },
+                        { name: 'Price Per Share', value: `${prePrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} crack`, inline: true },
 
                         { name: 'Total Earned', value: `${revenue.toLocaleString()} crack`, inline: true },
                         { name: 'Profit / Loss', value: `${profitEmoji} ${profit.toLocaleString()} crack`, inline: true },
