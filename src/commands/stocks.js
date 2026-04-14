@@ -210,7 +210,10 @@ export default async (interaction) => {
                     .addFields(
                         { name: 'Stock', value: `${stockId}`, inline: true },
                         { name: 'Shares Bought', value: `${amount}`, inline: true },
-                        { name: 'Impact', value: `+${(finalImpact * 100).toFixed(3)}%`, inline: true }
+                        { name: 'Price Per Share', value: `${prePrice.toFixed(2)} crack`, inline: true },
+
+                        { name: 'Total Spent', value: `${cost.toLocaleString()} crack`, inline: true },
+                        { name: 'New Balance', value: `${user.crack.toLocaleString()} crack`, inline: true }
                     )
             ]
         });
@@ -249,6 +252,13 @@ export default async (interaction) => {
 
         saveJSON(ECONOMY_FILE, economy);
 
+        const costBasis = holding.avgPrice * amount;
+        const profit = revenue - costBasis;
+
+        const profitEmoji =
+            profit > 0 ? '📈' :
+            profit < 0 ? '📉' : '➖';
+
         return respond({
             embeds: [
                 new EmbedBuilder()
@@ -257,7 +267,12 @@ export default async (interaction) => {
                     .addFields(
                         { name: 'Stock', value: `${stockId}`, inline: true },
                         { name: 'Shares Sold', value: `${amount}`, inline: true },
-                        { name: 'Earned', value: `${revenue.toLocaleString()} crack`, inline: true }
+                        { name: 'Price Per Share', value: `${prePrice.toFixed(2)} crack`, inline: true },
+
+                        { name: 'Total Earned', value: `${revenue.toLocaleString()} crack`, inline: true },
+                        { name: 'Profit / Loss', value: `${profitEmoji} ${profit.toLocaleString()} crack`, inline: true },
+
+                        { name: 'New Balance', value: `${user.crack.toLocaleString()} crack`, inline: true }
                     )
             ]
         });
