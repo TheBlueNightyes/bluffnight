@@ -120,12 +120,12 @@ export default async (interaction) => {
                 .setTitle(`📈 ${stock.name}`)
                 .setColor(0x00b0f4)
                 .addFields(
-                    { name: 'Price', value: `${stock.price.toFixed(2)} crack`, inline: true },
+                    { name: 'Price', value: `${stock.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} crack`, inline: true },
                     { name: 'Trend', value: `${stock.trend}`, inline: true },
 
-                    { name: '📦 Your Shares', value: `${shares}`, inline: true },
-                    { name: '💰 Avg Buy Price', value: `${avgPrice.toFixed(2)} crack`, inline: true },
-                    { name: '📊 Profit / Loss', value: `${profitEmoji} ${profit.toFixed(2)} crack`, inline: true }
+                    { name: '📦 Your Shares', value: `${shares.toLocaleString()}`, inline: true },
+                    { name: '💰 Avg Buy Price', value: `${avgPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} crack`, inline: true },
+                    { name: '📊 Profit / Loss', value: `${profitEmoji} ${profit.toLocaleString()} crack`, inline: true }
                 );
 
             const chartBuffer = generateStockChart(history);
