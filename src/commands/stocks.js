@@ -39,7 +39,8 @@ export const config = createCommandConfig({
             choices: [
                 { name: 'view', value: 'view' },
                 { name: 'buy', value: 'buy' },
-                { name: 'sell', value: 'sell' }
+                { name: 'sell', value: 'sell' },
+                { name: 'portfolio', value: 'portfolio' }
             ]
         },
         {
@@ -276,6 +277,80 @@ export default async (interaction) => {
 
                         { name: 'New Balance', value: `${user.crack.toLocaleString()} crack`, inline: true }
                     )
+            ]
+        });
+    }
+
+    if (mode === 'portfolio') {
+        const holdings = user.stocks || {};
+
+        const entries = Object.entries(holdings).map(([id, holding]) => {
+            const stock = stocks[id];
+            if (!stock) return null;
+
+            const totalSharesInMarket = stock.totalShares || 0;
+
+            const value = holding.shares * stock.price;
+            const profit = (stock.price - holding.avgPrice) * holding.shares;
+
+            return {
+                name: stock.name,
+                id,
+                shares: holding.shares,
+                avgPrice: holding.avgPrice,
+                value,
+                profit,
+                totalSharesInMarket
+            };
+        })
+        .filter(Boolean);
+
+        entries.sort((a, b) => b.profit - a.profit);
+
+        let totalValue = 0;
+
+        const lines = entries.map((s, index) => {
+            totalValue += s.value;
+
+            const profitEmoji =
+                s.profit > 0 ? "📈" :
+                s.profit < 0 ? "📉" : "➖";
+
+            const maxBar = 20;
+
+            const topProfit = entries[0]?.profit || 1;
+
+            const ratio = topProfit !== 0 ? s.profit / topProfit : 0;
+
+            const barFill = Math.max(1, Math.round(Math.abs(ratio) * maxBar));
+            const bar = "█".repeat(barFill) + "░".repeat(maxBar - barFill);
+
+            return `**${index + 1}. ${s.name}**
+            📈 ${s.shares.toLocaleString()} shares @ ${s.avgPrice.toFixed(2)} crack
+            💰 Value: ${s.value.toLocaleString()} crack
+            ${profitEmoji} ${s.profit.toLocaleString()} crack
+            ${bar}`;
+        });
+
+        const userPortfolio = interaction.user.username
+
+        return respond({
+            embeds: [
+                new EmbedBuilder()
+                    .setColor(0x00b0f4)
+                    .setDescription(
+                        lines.length ? lines.join('\n\n') : "No investments yet."
+                    )
+                    .addFields({
+                        name: "Total Portfolio Value",
+                        value: `${Math.round(totalValue).toLocaleString()} crack`,
+                        inline: true
+                    })
+                    .setAuthor({ 
+                        name: `${userPortfolio}'s Portfolio`, 
+                        iconURL: interaction.user.displayAvatarURL({ dynamic: true }) 
+                    })
+                    .setTimestamp()
             ]
         });
     }
