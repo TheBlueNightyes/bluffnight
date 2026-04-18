@@ -210,7 +210,7 @@ export default async (interaction) => {
                     .setColor('#00ff99')
                     .addFields(
                         { name: 'Stock', value: `${stockId}`, inline: true },
-                        { name: 'Shares Bought', value: `${amount}`, inline: true },
+                        { name: 'Shares Bought', value: `${amount.toLocaleString()}`, inline: true },
                         { name: 'Price Per Share', value: `${prePrice.toFixed(2)} crack`, inline: true },
 
                         { name: 'Total Spent', value: `${cost.toLocaleString()} crack`, inline: true },
@@ -269,7 +269,7 @@ export default async (interaction) => {
                     .setColor('#ff5555')
                     .addFields(
                         { name: 'Stock', value: `${stockId}`, inline: true },
-                        { name: 'Shares Sold', value: `${amount}`, inline: true },
+                        { name: 'Shares Sold', value: `${amount.toLocaleString()}`, inline: true },
                         { name: 'Price Per Share', value: `${prePrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} crack`, inline: true },
 
                         { name: 'Total Earned', value: `${revenue.toLocaleString()} crack`, inline: true },
