@@ -3,6 +3,21 @@ import path from 'path';
 import { EmbedBuilder } from 'discord.js';
 import { createCommandConfig, logger } from 'robo.js';
 
+let cachedRoleRewards = null;
+
+function loadRoleRewards() {
+    if (cachedRoleRewards) return cachedRoleRewards;
+
+    try {
+        const raw = fs.readFileSync(ROLEREWARDS_FILE, 'utf-8');
+        cachedRoleRewards = JSON.parse(raw);
+        return cachedRoleRewards;
+    } catch (err) {
+        logger.error('Failed to load roles.json:', err);
+        return {};
+    }
+}
+
 const ROLEREWARDS_FILE = path.resolve('src/storage/roles.json');
 const ECONOMY_FILE = path.resolve('src/storage/economy.json');
 const COOLDOWN_MS = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
@@ -46,20 +61,18 @@ export default async (interaction) => {
     const guildId = guild.id;
     const member = await guild.members.fetch(userId);
     const userRoles = member.roles.cache;
-    
-    const allowedGuildId = '1283954438868041728';
-    if (interaction.guild.id !== allowedGuildId) {
+
+    if (!data[guildId]) {
         const errorEmbed = new EmbedBuilder()
-            .setTitle('❌ Not Allowed')
+            .setTitle('❌ Not Supported')
             .setColor('Red')
-            .setDescription('This command can only be used in the main server.')
+            .setDescription("This command doesn't support your server.")
             .setTimestamp();
 
         return interaction.reply({ embeds: [errorEmbed], ephemeral: true });
     }
 
    // Ensure economy data is initialized
-    if (!data[guildId]) data[guildId] = {};
     if (!data[guildId].users) data[guildId].users = {};
     if (!data[guildId].users[userId]) {
         data[guildId].users[userId] = { 
@@ -75,7 +88,7 @@ export default async (interaction) => {
     const userData = data[guildId].users[userId];
 
     if (userData.lastCollect && now - userData.lastCollect < COOLDOWN_MS) {
-        const remaining = COOLDOWN_MS - (now - data[guildId].users[userId].lastCollect);
+        const remaining = COOLDOWN_MS - (now - userData.lastCollect);
         const hours = Math.floor(remaining / 3600000);
         const minutes = Math.floor((remaining % 3600000) / 60000);
         const seconds = Math.floor((remaining % 60000) / 1000);
@@ -94,7 +107,16 @@ export default async (interaction) => {
     let totalFentanyl = 0;
     let rewardBreakdown = [];
 
-    const roleRewards = JSON.parse(fs.readFileSync(ROLEREWARDS_FILE, 'utf-8'));
+    const allRoleRewards = loadRoleRewards();
+
+    if (!allRoleRewards[guildId]) {
+        return interaction.reply({
+            content: '❌ No rewards configured for this server.',
+            ephemeral: true
+        });
+    }
+
+    const roleRewards = allRoleRewards[guildId];
 
     for (const [roleId, rewards] of Object.entries(roleRewards)) {
         if (userRoles.has(roleId)) {
