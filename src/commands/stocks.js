@@ -318,12 +318,18 @@ export default async (interaction) => {
 
             const maxBar = 20;
 
-            const topProfit = entries[0]?.profit || 1;
+            const topProfit = Math.max(...entries.map(e => Math.abs(e.profit)), 1);
 
-            const ratio = topProfit !== 0 ? s.profit / topProfit : 0;
+            const ratio = Math.abs(s.profit) / topProfit;
 
-            const barFill = Math.max(1, Math.round(Math.abs(ratio) * maxBar));
-            const bar = "█".repeat(barFill) + "░".repeat(maxBar - barFill);
+            const barFill = Math.min(
+                maxBar,
+                Math.max(0, Math.round(ratio * maxBar))
+            );
+
+            const bar =
+                "█".repeat(barFill) +
+                "░".repeat(Math.max(0, maxBar - barFill));
 
             return `**${index + 1}. ${s.name}**
             📈 ${s.shares.toLocaleString()} shares @ ${s.avgPrice.toFixed(2)} crack
