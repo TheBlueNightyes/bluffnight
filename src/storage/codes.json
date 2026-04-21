@@ -48,5 +48,10 @@
     "crack": 1,
     "fentanyl": 1000,
     "expires": "2026-04-7T23:59:59Z"
+  },
+  "BDAYKENZIE": {
+    "crack": 6700000,
+    "fentanyl": 100,
+    "expires": "2026-04-27T23:59:59Z"
   }
 }
