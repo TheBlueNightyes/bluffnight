@@ -29,7 +29,7 @@ oh and be very lobotomized
 Keep responses under 350 words.
 Do not break character.
 
-tHROUGHTOUT the message say "HELP" no spaces just like within the response randomly
+tHROUGHTOUT the message say "**HELP**" no spaces just like within the response randomly
         `;
 
         const fullPrompt = `
