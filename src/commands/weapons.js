@@ -18,12 +18,12 @@ function saveEconomyData(data) {
 
 const weapons = [
     { name: "Sword", rarity: "common", cost: { steel: 5000 }, crack: 125000, fentanyl: 50 },
-    { name: "Shotgun", rarity: "common", cost: { steel: 8000, chromium: 1000 }, crack: 200000, fentanyl: 100 },
-    { name: "Sniper", rarity: "rare", cost: { steel: 8000, chromium: 2500 }, crack: 300000, fentanyl: 250 },
-    { name: "LMG", rarity: "rare", cost: { steel: 11500, chromium: 4000, tungsten: 50 }, crack: 50000000, fentanyl: 400 },
-    { name: "Flamethrower", rarity: "epic", cost: { steel: 10000, chromium: 3000, tungsten: 3000 }, crack: 80000000, fentanyl: 750 },
+    { name: "Shotgun", rarity: "common", cost: { steel: 7000, chromium: 1000 }, crack: 200000, fentanyl: 100 },
+    { name: "Sniper", rarity: "rare", cost: { steel: 7000, chromium: 2500 }, crack: 300000, fentanyl: 250 },
+    { name: "LMG", rarity: "rare", cost: { steel: 7000, chromium: 4000, tungsten: 50 }, crack: 50000000, fentanyl: 400 },
+    { name: "Flamethrower", rarity: "epic", cost: { steel: 8500, chromium: 3000, tungsten: 3000 }, crack: 80000000, fentanyl: 750 },
     { name: "Railgun", rarity: "epic", cost: { tungsten: 9000, uranium: 4000 }, crack: 120000000, fentanyl: 1200 },
-    { name: "Tank", rarity: "legendary", cost: { steel: 16000, chromium: 9000, tungsten: 6700, uranium: 8900 }, crack: 300000000, fentanyl: 2500 },
+    { name: "Tank", rarity: "legendary", cost: { steel: 11000, chromium: 9000, tungsten: 6700, uranium: 8900 }, crack: 300000000, fentanyl: 2500 },
     { name: "Nuke", rarity: "legendary", cost: { plutonium: 50000, uranium: 55000 }, crack: 50000000000, fentanyl: 5000 }
 ];
 
