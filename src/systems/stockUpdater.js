@@ -85,6 +85,5 @@ function updateStocks() {
 export function startStockUpdater() {
     setInterval(() => {
         updateStocks();
-        console.log('📈 Stocks updated');
     }, 15 * 1000);
 }
