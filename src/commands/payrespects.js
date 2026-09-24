@@ -35,7 +35,8 @@ export const config = createCommandConfig({
             choices: [
                 { name: 'macaroni town', value: 'macaroni town' },
                 { name: 'carcer city', value: 'carcer city' },
-                { name: 'bing bong', value: 'bing bong' }
+                { name: 'bing bong', value: 'bing bong' },
+                { name: 'el small', value: 'el small' }
             ],
             required: true
         }
@@ -46,7 +47,8 @@ const miscData = loadMiscData();
 const counters = {
     'macaroni town': miscData.macaroniRespected || 0,
     'carcer city': miscData.carcerRespected || 0,
-    'bing bong': miscData.bingBongRespected || 0
+    'bing bong': miscData.bingBongRespected || 0,
+    'el small': miscData.elSmallRespected || 0
 };
 
 export default (interaction) => {
@@ -66,6 +68,7 @@ export default (interaction) => {
     saveMiscData({
         macaroniRespected: counters['macaroni town'],
         carcerRespected: counters['carcer city'],
-        bingBongRespected: counters['bing bong']
+        bingBongRespected: counters['bing bong'],
+        elSmallRespected: counters['el small']
     });
 };
