@@ -42,7 +42,7 @@ Message: ${message}
         console.error(err);
 
         if (interaction.deferred || interaction.replied) {
-            await interaction.editReply("The AI folded under pressure.");
+            await interaction.editReply("shut up");
         }
     }
 }
